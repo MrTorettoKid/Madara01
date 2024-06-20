@@ -15,7 +15,7 @@ from database.database import add_user, del_user, full_userbase, present_user
 
 check_id = []
 
-@Bot.on_message(filters.command('start') & filters.private)
+@Bot.on_message(filters.command('start') & filters.private & subscribed)
 async def start_command(client: Client , message: ChatJoinRequest):
   try:
     id = message.from_user.id
