@@ -12,15 +12,53 @@ from database.database import add_user, del_user, full_userbase, present_user
 
 
 
+check_id = []
 
-@Bot.on_message(filters.command('start') & filters.private & subscribed)
-async def start_command(client: Client, message: Message):
+@Bot.on_message(filters.command('start') & filters.private)
+async def start_command(client: Client , message: ChatJoinRequest):
+  try:
+    id = message.from_user.id
     id = message.from_user.id
     if not await present_user(id):
         try:
             await add_user(id)
         except:
             pass
+    if id not in check_id:
+        print(check_id)
+        buttons = [
+            [
+                InlineKeyboardButton(
+                    "JOIN CHANNEL" ,
+                    url="https://t.me/+5j3dhjuZexMwYzY9"
+                )
+            ]
+        ]
+        try:
+            buttons.append(
+              [
+                InlineKeyboardButton(
+                    text='Try Again' ,
+                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+              ]
+            )
+        except IndexError:
+           pass
+        await message.reply(
+            text=FORCE_MSG.format(
+                first=message.from_user.first_name ,
+                last=message.from_user.last_name ,
+                username=None if not message.from_user.username else '@' + message.from_user.username ,
+                mention=message.from_user.mention ,
+                id=message.from_user.id
+            ) ,
+            reply_markup=InlineKeyboardMarkup(buttons) ,
+            quote=True ,
+            disable_web_page_preview=True
+        )
+        print(check_id.append(id))
+        return
     text = message.text
     if len(text)>7:
         try:
@@ -100,51 +138,89 @@ async def start_command(client: Client, message: Message):
             disable_web_page_preview = True,
             quote = True
         )
-        return   
+        return
 
 
-#=====================================================================================##
+  except Exception as e:
+      print(e)
+
+    # =====================================================================================##
+
 
 WAIT_MSG = """"<b>Processing ....</b>"""
 
 REPLY_ERROR = """<code>Use this command as a reply to any telegram message with out any spaces.</code>"""
 
-#=====================================================================================##
 
-    
-    
+# =====================================================================================##
+
+
 @Bot.on_message(filters.command('start') & filters.private)
-async def not_joined(client: Client, message: Message):
-    buttons = [
-        [
-            InlineKeyboardButton(text="Join Channel", url=client.invitelink),
-            InlineKeyboardButton(text="Join Channel", url=client.invitelink2),
-        ]
-    ]
-    try:
-        buttons.append(
+async def not_joined(client: Client , message: ChatJoinRequest):
+    if id in check_id:
+        buttons = [
             [
-                InlineKeyboardButton(
-                    text = 'Try Again',
-                    url = f"https://t.me/{client.username}?start={message.command[1]}"
+                InlineKeyboardButton(text="Join Channel" , url=FORCE_SUB_CHANNEL) ,
+                InlineKeyboardButton(text="Join Channel" , url=FORCE_SUB_CHANNEL2) ,
+            ]
+        ]
+        try:
+            buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text='Try Again' ,
+                        url=f"https://t.me/ai_test_pic_bot?start=start"
+                    )
+                ]
+            )
+        except IndexError:
+            pass
+
+        await message.reply(
+            text=FORCE_MSG.format(
+                first=message.from_user.first_name ,
+                last=message.from_user.last_name ,
+                username=None if not message.from_user.username else '@' + message.from_user.username ,
+                mention=message.from_user.mention ,
+                id=message.from_user.id
+            ) ,
+            reply_markup=InlineKeyboardMarkup(buttons) ,
+            quote=True ,
+            disable_web_page_preview=True
+        )
+    elif id not in check_id:
+        buttons = [
+            [
+                InlineKeyboardButton(text="Join Channel" , url=FORCE_SUB_CHANNEL) ,
+                InlineKeyboardButton(text="Join Channel" , url=FORCE_SUB_CHANNEL2) ,
+                InlineKeyboardButton("JOIN CHANNEL" , url="https://t.me/+5j3dhjuZexMwYzY9"
                 )
             ]
+        ]
+        try:
+            buttons.append(
+              [
+                InlineKeyboardButton(
+                    text='Try Again' ,
+                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+              ]
+            )
+        except IndexError:
+           pass
+        await message.reply(
+            text=FORCE_MSG.format(
+                first=message.from_user.first_name ,
+                last=message.from_user.last_name ,
+                username=None if not message.from_user.username else '@' + message.from_user.username ,
+                mention=message.from_user.mention ,
+                id=message.from_user.id
+            ) ,
+            reply_markup=InlineKeyboardMarkup(buttons) ,
+            quote=True ,
+            disable_web_page_preview=True
         )
-    except IndexError:
-        pass
-
-    await message.reply(
-        text = FORCE_MSG.format(
-                first = message.from_user.first_name,
-                last = message.from_user.last_name,
-                username = None if not message.from_user.username else '@' + message.from_user.username,
-                mention = message.from_user.mention,
-                id = message.from_user.id
-            ),
-        reply_markup = InlineKeyboardMarkup(buttons),
-        quote = True,
-        disable_web_page_preview = True
-    )
+        print(check_id.append(id))
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
