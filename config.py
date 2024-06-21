@@ -39,7 +39,7 @@ FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1001473043276"))
 FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1001644866777"))
 
 #requested force sub channel link
-RE_FORCE_SUB_CHANNEL = os.environ.get("FORCE_SUB_CHANNEL", "https://t.me/+5j3dhjuZexMwYzY9")
+RE_FORCE_SUB_CHANNEL = os.environ.get("RE_FORCE_SUB_CHANNEL", "")
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
